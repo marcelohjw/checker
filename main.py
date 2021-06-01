@@ -20,7 +20,7 @@ count = 1
 for img in images:
     src = img['src']
     img_obj = requests.get(src)
-
+    print("Getting the " + str(count) + " " + keyword)
     img = Image.open(BytesIO(img_obj.content))
     format4 = img.format
     img.save(f'images/{keyword}{count}.{format4.lower()}', img.format)
