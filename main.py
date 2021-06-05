@@ -5,7 +5,7 @@ from io import BytesIO
 import requests
 
 search_url = 'https://bing.com/images/search'
-keyword = sg.popup_get_text('What you want to get?')
+keyword = sg.popup_get_text('What you want to get?', size=(100, 200))
 params = {'q': '+' + keyword}
 
 r = requests.get(search_url, params)
@@ -14,7 +14,7 @@ soap = BeautifulSoup(r.text, 'html.parser')
 
 images = soap.find_all('img', {'class': 'mimg'})
 numpery = len(images)
-sg.popup_annoying("Getting " + str(numpery) + " " + keyword + " images...")
+sg.popup("Getting " + str(numpery) + " " + keyword + " images...")
 
 count = 1
 for img in images:
@@ -25,4 +25,4 @@ for img in images:
     format4 = img.format
     img.save(f'{keyword}{count}.{format4.lower()}', img.format)
     count += 1
-sg.popup_annoying("Finished! Check the folder!", background_color='Green')
+sg.popup("Finished! Check the folder!", background_color='Green')
