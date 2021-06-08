@@ -23,6 +23,6 @@ for img in images:
     print("Getting the " + str(count) + " " + keyword)
     img = Image.open(BytesIO(img_obj.content))
     format4 = img.format
-    img.save(f'{keyword}{count}.{format4.lower()}', img.format)
+    img.save(f'images/{keyword}{count}.{format4.lower()}', img.format)
     count += 1
 sg.popup("Finished! Check the folder!", background_color='Green')
