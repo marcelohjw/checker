@@ -25,4 +25,4 @@ for img in images:
     format4 = img.format
     img.save(f'images/{keyword}{count}.{format4.lower()}', img.format)
     count += 1
-sg.popup("Finished! Check the folder!", background_color='Green')
+sg.popup("Finished! Check the images folder!", background_color='Green')
