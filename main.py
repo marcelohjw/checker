@@ -4,41 +4,49 @@ from PIL import Image
 from io import BytesIO
 import requests
 
-layoutInit = [[sg.T('What you want to get?')],
-          [sg.I()],
-          [sg.Ok(), sg.Cancel()]]
+run = True
 
-search_url = 'https://bing.com/images/search'
+while run:
+    layoutInit = [[sg.T('O que você deseja obter?')],
+              [sg.I()],
+              [sg.Ok(), sg.Cancel()]]
 
-first_window = sg.Window('Checker V1', layoutInit)
-event, keyword = first_window.read(close=True)
+    search_url = 'https://bing.com/images/search'
 
-# keyword = sg.popup_get_text('What you want to get?', size=(100, 200))
-params = {'q': '+' + str(keyword[0])}
+    first_window = sg.Window('Checker V1', layoutInit)
+    event, keyword = first_window.read(close=True)
 
-r = requests.get(search_url, params)
+    params = {'q': '+' + str(keyword[0])}
 
-soap = BeautifulSoup(r.text, 'html.parser')
+    r = requests.get(search_url, params)
 
-images = soap.find_all('img', {'class': 'mimg'})
-numpery = len(images)
+    soap = BeautifulSoup(r.text, 'html.parser')
 
-layoutMid = [[sg.T("Getting " + str(numpery) + " " + str(keyword[0]) + " images...")]]
-mid_window = sg.Window('Checker V1', layoutMid)
-mid = mid_window.read()
-# sg.popup("Getting " + str(numpery) + " " + str(keyword[0]) + " images...")
+    images = soap.find_all('img', {'class': 'mimg'})
+    numpery = len(images)
 
-count = 1
-for img in images:
-    src = img['src']
-    img_obj = requests.get(src)
-    print("Getting the " + str(count) + " " + str(keyword[0]))
-    img = Image.open(BytesIO(img_obj.content))
-    format4 = img.format
-    img.save(f'images/{keyword[0]}{count}.{format4.lower()}', img.format)
-    count += 1
-# sg.popup("Finished! Check the images folder!", background_color='Green')
+    layoutMid = [[sg.T("Obtendo " + str(numpery) + " " + str(keyword[0]) + "...")]]
+    mid_window = sg.Window('Checker V1', layoutMid, size=(250, 50))
+    mid = mid_window.read()
 
-layoutEnd = [[sg.T('Done! Check your images folder!')]]
-window = sg.Window('Checker V1', layoutEnd)
-final = window.read()
+    count = 1
+    for img in images:
+        src = img['src']
+        img_obj = requests.get(src)
+        print("Obtendo " + str(keyword[0] + " " + str(count)))
+        img = Image.open(BytesIO(img_obj.content))
+        format4 = img.format
+        img.save(f'images/{keyword[0]}{count}.{format4.lower()}', img.format)
+        count += 1
+
+    layoutEnd = [[sg.T('Finalizado, verifique a pasta imagens!')],
+                 [sg.T('Repetir processo?')],
+                 [sg.Ok(), sg.Cancel()]]
+    window = sg.Window('Checker V1', layoutEnd)
+    final = window.read()
+    if final[0] == 'Ok':
+        window.close()
+        continue
+    else:
+        window.close()
+        break
